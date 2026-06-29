@@ -1,0 +1,6 @@
+.lock
+tmp/
+.flatpak-builder/
+build-dir/
+repo/
+*.flatpak
