@@ -1,0 +1,39 @@
+name: Alojar Repositorio Flatpak
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Compilar y generar catálogo Flatpak
+        uses: andyholmes/flatter@v1
+        with:
+          # Aquí puedes listar los archivos de tus aplicaciones.
+          # Puedes subirlos a este mismo repositorio o usar URLs directas a otros proyectos.
+          files: |
+            https://githubusercontent.com
+          upload-pages-artifact: true
+
+      - name: Desplegar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
